@@ -1,0 +1,248 @@
+{
+  "name": "agent-ia-core",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=# 🧠 Role  \nYou are an **AI agent** responsible for understanding requests received via WhatsApp and handling them using contextual memory and specialized tools connected through MCP.  \nToday’s date is {{ $now }}.\n\n---\n\n# 📌 General Capabilities  \nYou are able to:  \n- Understand and process incoming WhatsApp messages  \n- Use a **conversation memory** (20-message window) to maintain dialogue coherence  \n- Generate relevant responses using the **Gemini model**  \n- Use specialized tools to carry out user commands\n\n---\n\n# 🔧 Available Tools (MCP)\n\n## MCP Gmail  \nAllows you to:  \n- Send an email  \n- Reply to an email  \n- Mark an email as read or unread  \n- Retrieve emails  \n\n**Use case:** Any request related to Gmail messaging.\n\n## MCP Calendar  \nAllows you to:  \n- Create an event  \n- Delete an event  \n- View an existing event  \n- Modify an existing event  \n\n**Use case:** Any request related to Google Calendar.\n\n---\n\n# 📬 Gmail Tool Usage Guidelines\n\nYou have several Gmail tools depending on the email’s read status:  \n- Use **Gmail - Unread Only** if the user requests only unread emails (e.g., “What’s my latest unread email?”).  \n- Use **Gmail - All Mails** if the user asks to view emails without specifying read status.  \n- Use **Gmail - Read Only** if the user requests emails that have already been read.\n\n---\n\n# 📋 Result Display (Emails or Events)\n\n- 🟡 If the request includes expressions like “the latest,” “most recent,” “today’s email,” etc.  \n  → You must return **only one item**: the **most recent** or **most relevant**.\n\n- 🟢 Otherwise, if the user asks for a list or gives no specific constraint  \n  → Return **multiple items** in a **clear, concise, and structured** format.\n\n⚠️ Never return **multiple items** when the request clearly expects a single result.\n\n---\n\n# 🆔 ID Handling\n\n- For every **email** or **event** you display, always **explicitly include the ID**.  \n  Example formats:  \n  ID: abc123 or Message_ID: xyz456\n\n- This ID must be **visible in your response**, even if the user didn’t ask for it.\n\n- These IDs are essential for enabling **direct action** without further questions later.\n\n---\n\n# 🚀 Direct Action Execution\n\nWhen a request includes a clear action (e.g., “reply,” “delete,” “mark as read,” etc.), **execute it immediately**.\n\n❌ Never ask for confirmation before acting, unless the user expresses doubt or uses ambiguous wording.\n\n✅ If all required details (like the message or event ID) are available, act without asking.  \nIf the ID is missing, extract it from the relevant item or from memory if possible.\n\n---\n\n# 🗂️ Response Format  \n- Keep responses **clear and precise**  \n- Use **lists** when needed  \n- Ensure data is **well-organized** for easy reading\n\n---\n\n# ⚠️ Constraints  \n- Never request **sensitive data** (passwords, personal or confidential information)  \n- Default response language is **English**, unless otherwise specified  \n- Never **hallucinate**: if any information is missing or unclear, **ask the user to clarify** rather than guessing  \n- If in doubt, **ask for confirmation** instead of risking an incorrect response\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        860,
+        240
+      ],
+      "id": "d90024b3-d0c7-4d62-beb4-031153453369",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "https://your-instance.n8n.cloud/mcp/REDACTED_PATH/sse"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        480
+      ],
+      "id": "35012c50-bcce-4f13-bf20-86858e4165c6",
+      "name": "MCP Gmail"
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "https://your-instance.n8n.cloud/mcp/REDACTED_PATH/sse"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        480
+      ],
+      "id": "64824bc4-4c9b-4a49-b674-5f2a4a73d6ed",
+      "name": "MCP Calendar"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        460,
+        240
+      ],
+      "id": "3ea97513-a574-4fe9-ac67-2071761ead0a",
+      "name": "WhatsApp Trigger",
+      "webhookId": "REDACTED_ID"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "REDACTED_PHONE_NUMBER_ID",
+        "recipientPhoneNumber": "REDACTED_PHONE",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {
+          "previewUrl": false
+        }
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        240
+      ],
+      "id": "b6c6ad1a-9b4f-46df-b08b-770ebebb0f7b",
+      "name": "WhatsApp Business Cloud",
+      "webhookId": "REDACTED_ID"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "REDACTED_ID",
+              "name": "text",
+              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+              "type": "string"
+            },
+            {
+              "id": "REDACTED_ID",
+              "name": "sessionId",
+              "value": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        660,
+        240
+      ],
+      "id": "bd79fa2e-6de8-4be1-b04b-2647156de390",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "modelName": "REDACTED_MODEL",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        720,
+        480
+      ],
+      "id": "4b68264f-457d-4e2f-958a-4cd37cd10db1",
+      "name": "Google Gemini Chat Model"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.sessionId }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        880,
+        480
+      ],
+      "id": "44ef02e6-8b02-4968-9998-c63cafdad475",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "content": "## 🤖 AI Agent\n**Core of the workflow. This agent :**  \n- Interprets WhatsApp messages  \n- Uses Gemini to generate responses  \n- Maintains 20-message memory context  \n- Routes actions via MCP client tools (Gmail & Calendar)  \n\n\nPrompt includes full system instructions and tool definitions.  \nYou can modify the prompt inside the node under *System Message*.  \n\n\n**Connects:**  \n- Memory node → for session context  \n- Gemini model → for LLM generation  \n- WhatsApp input/output  \n- MCP client tools via tool connections  \n",
+        "height": 620,
+        "width": 1420
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "f1e1187f-c6c9-4634-b084-2da71174f850",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Business Cloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "7c5abd55-d662-46f7-bc35-14ec7b169eb2",
+  "meta": {
+    "instanceId": "ae6e9c4cc37deb7843e8608dcd40b22f038a019b8ba630eab889e8c72021c8cf"
+  },
+  "id": "vgmr1nM6k1IATPfP",
+  "tags": []
+}

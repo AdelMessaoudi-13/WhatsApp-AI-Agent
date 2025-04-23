@@ -1,0 +1,247 @@
+{
+  "name": "mcp-gmail",
+  "nodes": [
+    {
+      "parameters": {
+        "sendTo": "={{ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        -180,
+        200
+      ],
+      "id": "0cd4ecfc-c1a9-4eab-85a9-4797ee953629",
+      "name": "Send",
+      "webhookId": "REDACTED_ID"
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $fromAI('Message_ID', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        400,
+        200
+      ],
+      "id": "ab8f284f-318b-43b7-8f5b-6101b40de80b",
+      "name": "Reply",
+      "webhookId": "REDACTED_ID"
+    },
+    {
+      "parameters": {
+        "operation": "markAsUnread",
+        "messageId": "={{ $fromAI('Message_ID', ``, 'string') }}"
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        680,
+        200
+      ],
+      "id": "9eceb4f0-7a0c-492c-952a-f49b5a64f024",
+      "name": "Mark as unread",
+      "webhookId": "REDACTED_ID"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 20,
+        "filters": {
+          "q": "={{ $fromAI('Search', 'category:primary', 'string') }}",
+          "readStatus": "unread"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        -60,
+        200
+      ],
+      "id": "9adc5ecb-c954-437c-b93b-fea29855e3e3",
+      "name": "Gmail - Unread Only",
+      "webhookId": "REDACTED_ID"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 20,
+        "filters": {
+          "q": "={{ $fromAI('Search', 'category:primary', 'string') }}",
+          "readStatus": "read"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        100,
+        200
+      ],
+      "id": "261941c7-d9d9-47f5-82f3-63f181602082",
+      "name": "Gmail - Read Only",
+      "webhookId": "REDACTED_ID"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 20,
+        "filters": {
+          "q": "={{ $fromAI('Search', 'category:primary', 'string') }}",
+          "readStatus": "both"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        240,
+        200
+      ],
+      "id": "d1b8e242-a28a-4db9-a2f3-9d5fa29f375d",
+      "name": "Gmail - All Mails",
+      "webhookId": "REDACTED_ID"
+    },
+    {
+      "parameters": {
+        "operation": "markAsRead",
+        "messageId": "={{ $fromAI('Message_ID', ``, 'string') }}"
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        520,
+        200
+      ],
+      "id": "895c0bf1-aba6-4fe7-bcdf-c7881edde17e",
+      "name": "Mark as read",
+      "webhookId": "REDACTED_ID"
+    },
+    {
+      "parameters": {
+        "content": "## MCP Server Gmail\n**Handles all Gmail-related actions :**\n- Retrieve emails (unread, read, all)\n- Send and reply to emails\n- Mark emails as read or unread",
+        "height": 420,
+        "width": 1060
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -260,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "9c8e8de1-83d0-4ff9-be2b-4f377e326ebb",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "path": "REDACTED_PATH"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        160,
+        -40
+      ],
+      "id": "25d32318-be50-4a30-86fc-e9146a5350c9",
+      "name": "MCP Server Gmail",
+      "webhookId": "REDACTED_ID"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Send": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Gmail",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Gmail",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark as unread": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Gmail",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - Unread Only": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Gmail",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - Read Only": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Gmail",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - All Mails": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Gmail",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark as read": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Gmail",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "94db598e-6166-4a0d-a117-6ac043429d34",
+  "meta": {
+    "instanceId": "ae6e9c4cc37deb7843e8608dcd40b22f038a019b8ba630eab889e8c72021c8cf"
+  },
+  "id": "8BvUXzBltQYVOQRn",
+  "tags": []
+}

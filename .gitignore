@@ -1,0 +1,11 @@
+# System files
+.DS_Store
+Thumbs.db
+
+# Node projects
+node_modules/
+
+# Environment variables
+.env
+.env.local
+

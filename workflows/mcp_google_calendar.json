@@ -1,0 +1,188 @@
+{
+  "name": "mcp-google-calendar",
+  "nodes": [
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "your.email@gmail.com",
+          "mode": "list",
+          "cachedResultName": "your.email@gmail.com"
+        },
+        "start": "={{ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ $fromAI('End', ``, 'string') }}",
+        "additionalFields": {
+          "attendees": [],
+          "description": "={{ $fromAI('Description', ``, 'string') }}",
+          "summary": "={{ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        40,
+        180
+      ],
+      "id": "26759c85-c33d-4dfe-91e2-92a2ad85cad5",
+      "name": "Create event"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "your.email@gmail.com",
+          "mode": "list",
+          "cachedResultName": "your.email@gmail.com"
+        },
+        "eventId": "={{ $fromAI('Event_ID', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        160,
+        180
+      ],
+      "id": "51941f01-e781-494d-80a3-65d61e11b0ba",
+      "name": "Delete event"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "your.email@gmail.com",
+          "mode": "list",
+          "cachedResultName": "your.email@gmail.com"
+        },
+        "limit": 20,
+        "timeMin": "={{ $fromAI('After', ``, 'string') }}",
+        "timeMax": "={{ $fromAI('Before', ``, 'string') }}",
+        "options": {
+          "query": "={{ $fromAI('Query', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        280,
+        180
+      ],
+      "id": "767fcd30-c046-43db-ae38-b607df071e0c",
+      "name": "Get event"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "your.email@gmail.com",
+          "mode": "list",
+          "cachedResultName": "your.email@gmail.com"
+        },
+        "eventId": "={{ $fromAI('Event_ID', ``, 'string') }}",
+        "updateFields": {
+          "description": "={{ $fromAI('Description', ``, 'string') }}",
+          "end": "={{ $fromAI('End', ``, 'string') }}",
+          "start": "={{ $fromAI('Start', ``, 'string') }}",
+          "summary": "={{ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        180
+      ],
+      "id": "cc89bf91-e846-4621-9737-1d73e5a2f34f",
+      "name": "Update event"
+    },
+    {
+      "parameters": {
+        "content": "## MCP Server Calendar \n**Handles all Google Calendar actions :**\n- Create an event\n- Delete an event\n- Update an event\n- View upcoming events",
+        "height": 420,
+        "width": 780
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -280,
+        -100
+      ],
+      "typeVersion": 1,
+      "id": "2d5b1432-394c-4bea-b743-3e13a0c2cf73",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "path": "REDACTED_PATH"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        60,
+        -60
+      ],
+      "id": "254176ae-51af-4c89-bb1c-1c40744d7f23",
+      "name": "MCP Server Calendar",
+      "webhookId": "REDACTED_ID"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Create event": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Calendar",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete event": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Calendar",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get event": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Calendar",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update event": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Calendar",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "acad00df-e2a3-4f44-b52e-f5f1c85f5de0",
+  "meta": {
+    "instanceId": "ae6e9c4cc37deb7843e8608dcd40b22f038a019b8ba630eab889e8c72021c8cf"
+  },
+  "id": "FD4XWCfTkVb6NY6G",
+  "tags": []
+}
