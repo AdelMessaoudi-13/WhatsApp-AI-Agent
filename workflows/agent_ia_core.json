@@ -153,6 +153,17 @@
       "typeVersion": 1,
       "id": "f1e1187f-c6c9-4634-b084-2da71174f850",
       "name": "Sticky Note1"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        480
+      ],
+      "id": "7c89a19f-2f66-4f18-ad94-35726f78d220",
+      "name": "Think"
     }
   ],
   "pinData": {},
@@ -233,13 +244,24 @@
           }
         ]
       ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "7c5abd55-d662-46f7-bc35-14ec7b169eb2",
+  "versionId": "a3497b56-7af8-4914-abaa-f4e169760a31",
   "meta": {
     "instanceId": "ae6e9c4cc37deb7843e8608dcd40b22f038a019b8ba630eab889e8c72021c8cf"
   },
